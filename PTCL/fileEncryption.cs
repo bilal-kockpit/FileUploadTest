@@ -1,5 +1,6 @@
 ﻿using FileTypeChecker;
 using FileTypeChecker.Abstracts;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -53,30 +54,40 @@ namespace PTCL
             return new Tuple<bool, string>(flag, msg);
         }
 
-        private  Tuple<bool, string> encryptFileUpload(string inputFile, string outputFile)
-        {
+        public static  Tuple<bool, string> encryptFileUpload(string fileUploadDirectoryPath, IFormFile file, string encrytionKey)
+        {    
+
             bool flag = true;
             string msg = "";
             try
             {
-                string password = @"myKey123"; // Your Key Here
+                if (!Directory.Exists(fileUploadDirectoryPath))
+                {
+                    Directory.CreateDirectory(fileUploadDirectoryPath);
+                }
+                byte[] bFile = new byte[file.Length];
+                var filePath = Path.Combine(fileUploadDirectoryPath, file.FileName);
                 UnicodeEncoding UE = new UnicodeEncoding();
-                byte[] key = UE.GetBytes(password);
+                byte[] key = UE.GetBytes(encrytionKey);
+                byte[] Key = Encoding.UTF8.GetBytes("asdf!@#$1234ASDF");
+                if (!System.IO.File.Exists(filePath))                {
+                    FileStream fs = new FileStream(filePath, FileMode.Create);
+                    RijndaelManaged rmCryp = new RijndaelManaged();
+                    CryptoStream cs = new CryptoStream(fs, rmCryp.CreateEncryptor(Key, Key), CryptoStreamMode.Write);
 
-                string cryptFile = outputFile;
-                FileStream fsCrypt = new FileStream(cryptFile, FileMode.Create);
 
-                RijndaelManaged RMCrypto = new RijndaelManaged();
+                    foreach (var data in bFile)
+                    {
+                        cs.WriteByte((byte)data);
+                    }
+                    cs.Close();
+                    fs.Close();
 
-                CryptoStream cs = new CryptoStream(fsCrypt,  RMCrypto.CreateEncryptor(key, key), CryptoStreamMode.Write);
-                FileStream fsIn = new FileStream(inputFile, FileMode.Open);
-                int data;
-                while ((data = fsIn.ReadByte()) != -1)
-                    cs.WriteByte((byte)data);
-                fsIn.Close();
-                cs.Close();
-                fsCrypt.Close();
+
+                }
             }
+
+            
             catch(Exception ex)
             {
                 msg = ex.Message;

@@ -28,7 +28,7 @@ namespace PTCL
                 else
                 {
                     IFileType fileType = FileTypeValidator.GetFileType(fileStream);
-                    if (fileExtn.Contains(fileType.Extension))
+                    if (fileExtn.ToLower().Contains(fileType.Extension))
                     {
                         flag = true;
                         msg = fileType.Extension;

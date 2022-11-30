@@ -12,8 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace FileUpload
-{
-    public class Startup
+{    public class Startup
     {
         public Startup(IConfiguration configuration)
         {

@@ -44,7 +44,7 @@ namespace FileUpload.Controllers
             return viewModel;
         }
         [HttpPost]
-        public async Task<IActionResult> UploadToFileSystem(List<IFormFile> files, string description)
+        public IActionResult UploadToFileSystem(List<IFormFile> files, string description)
         {
             List<string> errlist = new List<string>();
                 string wwwPath = this._env.WebRootPath;
@@ -65,10 +65,13 @@ namespace FileUpload.Controllers
                 var extension = Path.GetExtension(file.FileName);
                 if (!System.IO.File.Exists(filePath))
                 {
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await file.CopyToAsync(stream);
-                    }
+                    //using (var stream = new FileStream(filePath, FileMode.Create))
+                    //{
+                    //    file.CopyToAsync(stream);
+                    //}
+                    fileEncryption.encryptFileUpload(basePath, file, "");
+                  
+
                     var fileModel = new FileOnFileSystemModel
                     {
                         CreatedOn = DateTime.Now,
@@ -79,21 +82,23 @@ namespace FileUpload.Controllers
                         FilePath = filePath
                     };
                     //string abc = MimeTypes.GetContentType(file.FileName);
-                    var filecheck = chkContentFile.Validate(filePath, extension);
-                    if (filecheck.Item1==true)
-                    {
-                        _context.FileOnFileSystemModel.Add(fileModel);
-                        _context.SaveChanges();
-                    }
-                    else
-                    {
-                        errlist.Add(filecheck.Item2);
-                        if (System.IO.File.Exists(filePath))
-                        {
-                            System.IO.File.Delete(filePath);
-                        }
-                    }
-                  
+                    //var filecheck = chkContentFile.Validate(filePath, extension);
+                    //if (filecheck.Item1==true)
+                    //{
+                    //    _context.FileOnFileSystemModel.Add(fileModel);
+                    //    _context.SaveChanges();
+                    //}
+                    //else
+                    //{
+                    //    errlist.Add(filecheck.Item2);
+                    //    if (System.IO.File.Exists(filePath))
+                    //    {
+                    //        System.IO.File.Delete(filePath);
+                    //    }
+                    //}
+                    _context.FileOnFileSystemModel.Add(fileModel);
+                    _context.SaveChanges();
+
                 }
             }
             if (errlist.Count > 0)
@@ -109,7 +114,8 @@ namespace FileUpload.Controllers
                 TempData["Message"] = "File successfully uploaded to File System.";
 
             }
-            
+        //http://www.dotnetawesome.com/2013/11/how-to-upload-file-with-encryption-and.html
+
             return RedirectToAction("Index");
         }
         public async Task<IActionResult> DownloadFileFromFileSystem(int id)
