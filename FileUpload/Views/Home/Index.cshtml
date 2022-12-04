@@ -45,7 +45,12 @@ else
                     <td>@file.Description</td>
                     <td>@file.FileType</td>
                     <td>@file.CreatedOn</td>
-                    <td>
+                    <td width="27%">
+                       
+                        @*<a type="button" class="btn btn-info" asp-controller="Home" asp-action="showFileDetails" asp-route-id="@id">File Info</a>
+        <a type="button" class="btn btn-primary" asp-controller="Home" asp-action="DownloadFileFromFileSystem" asp-route-id="@file.Id">Download</a>
+        <a type="button" class="btn btn-danger" asp-controller="Home" asp-action="DeleteFileFromFileSystem" asp-route-id="@file.Id">Delete</a>*@
+                        <a type="button" class="btn btn-info" asp-controller="Home" asp-action="showFileDetails" asp-route-id="@PTCL.fileEncryptionDecryption.encryptText(file.Id.ToString(),System.Text.Encoding.Unicode)">File Info</a>
                         <a type="button" class="btn btn-primary" asp-controller="Home" asp-action="DownloadFileFromFileSystem" asp-route-id="@file.Id">Download</a>
                         <a type="button" class="btn btn-danger" asp-controller="Home" asp-action="DeleteFileFromFileSystem" asp-route-id="@file.Id">Delete</a>
                     </td>
