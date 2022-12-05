@@ -3,10 +3,16 @@
     ViewData["Title"] = "Home Page";
 }
 
-@if (ViewBag.Message != null)
+@if (ViewBag.success != null)
 {
-    <div class="alert alert-success alert-dismissible" style="margin-top:20px">
-        @ViewBag.Message
+<div class="alert alert-success alert-dismissible" style="margin-top:20px">
+    @ViewBag.success
+</div>
+}
+@if (ViewBag.error != null)
+{
+    <div class="alert alert-danger alert-dismissible" style="margin-top:20px">
+        @ViewBag.error
     </div>
 }
 <form method="post" enctype="multipart/form-data">
@@ -46,10 +52,10 @@ else
                     <td>@file.FileType</td>
                     <td>@file.CreatedOn</td>
                     <td width="27%">
-                       
+
                         @*<a type="button" class="btn btn-info" asp-controller="Home" asp-action="showFileDetails" asp-route-id="@id">File Info</a>
-        <a type="button" class="btn btn-primary" asp-controller="Home" asp-action="DownloadFileFromFileSystem" asp-route-id="@file.Id">Download</a>
-        <a type="button" class="btn btn-danger" asp-controller="Home" asp-action="DeleteFileFromFileSystem" asp-route-id="@file.Id">Delete</a>*@
+                            <a type="button" class="btn btn-primary" asp-controller="Home" asp-action="DownloadFileFromFileSystem" asp-route-id="@file.Id">Download</a>
+                            <a type="button" class="btn btn-danger" asp-controller="Home" asp-action="DeleteFileFromFileSystem" asp-route-id="@file.Id">Delete</a>*@
                         <a type="button" class="btn btn-info" asp-controller="Home" asp-action="showFileDetails" asp-route-id="@PTCL.fileEncryptionDecryption.encryptText(file.Id.ToString(),System.Text.Encoding.Unicode)">File Info</a>
                         <a type="button" class="btn btn-primary" asp-controller="Home" asp-action="DownloadFileFromFileSystem" asp-route-id="@file.Id">Download</a>
                         <a type="button" class="btn btn-danger" asp-controller="Home" asp-action="DeleteFileFromFileSystem" asp-route-id="@file.Id">Delete</a>

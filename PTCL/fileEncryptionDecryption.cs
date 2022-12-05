@@ -51,19 +51,21 @@ namespace PTCL
 
                         
                         flag = false;
-                        if (System.IO.File.Exists(filePath)) { System.IO.File.Delete(filePath); };
+                    
                     }
                     else
                     {
-                        var Ifilestream = file.OpenReadStream();
-
-                        var Ifiletype = FileTypeValidator.GetFileType(Ifilestream);
-                        var fileType = FileTypeValidator.GetFileType(fileStream);
-                        string a = fileType.Name;
-                        if (Ifiletype.Name== fileType.Name)
+                        var IfiletypeExtention = Path.GetExtension(file.FileName);
+                        var fileTypeExtention = FileTypeValidator.GetFileType(fileStream).Extension;
+                        
+                        if (IfiletypeExtention.ToLower().Contains(fileTypeExtention.ToLower()))
                         {
                             flag = true;
                             
+                        }
+                        else if(IfiletypeExtention== ".xlsx" || IfiletypeExtention==".xls")
+                        {
+                            flag = fileTypeExtention.Contains("docx") ? true : false;
                         }
                         else
                         {
@@ -92,17 +94,17 @@ namespace PTCL
             {
                 string encryptedFile = fileUploadDirectoryPath;
                 string actualFile = Path.Combine(fileUploadDirectoryPath, "Temp1");
-               
-                    if (!Directory.Exists(encryptedFile))
+
+                if (!Directory.Exists(encryptedFile))
                     {
                         Directory.CreateDirectory(encryptedFile);
                     }
-                    if (!Directory.Exists(actualFile))
-                    {
-                        Directory.CreateDirectory(actualFile);
-                    }
-                    actualFile = Path.Combine(actualFile, file.FileName);
-                    encryptedFile = Path.Combine(encryptedFile, file.FileName);
+                if (!Directory.Exists(actualFile))
+                {
+                    Directory.CreateDirectory(actualFile);
+                }
+                actualFile = Path.Combine(actualFile, file.FileName);
+                encryptedFile = Path.Combine(encryptedFile, file.FileName);
                     if (!System.IO.File.Exists(encryptedFile))
                     {
                         using (var stream = new FileStream(actualFile, FileMode.Create))
@@ -121,12 +123,14 @@ namespace PTCL
                     else
                     {
                         return new Tuple<bool, string>(false, EncryptFile(actualFile, encryptedFile).ToString());
+                           
                     }
-                }           
-                    
+                }              
                 else
                 {
+                    if (System.IO.File.Exists(actualFile)) { System.IO.File.Delete(actualFile); };
                     return new Tuple<bool, string>(false, "It is not a valid file");
+
 
                 }                
             }                 

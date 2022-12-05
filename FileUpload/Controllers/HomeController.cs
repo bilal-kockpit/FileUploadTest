@@ -30,11 +30,10 @@ namespace FileUpload.Controllers
         public async Task<IActionResult> Index()
         {
             var fileuploadViewModel = await LoadAllFiles();
-            ViewBag.Message = TempData["Message"];
+            ViewBag.success = TempData["success"];
+            ViewBag.error = TempData["error"];
             return View(fileuploadViewModel);
         }
-
-
         private async Task<FileUploadViewModel> LoadAllFiles()
         {
             var viewModel = new FileUploadViewModel();
@@ -43,7 +42,7 @@ namespace FileUpload.Controllers
             return viewModel;
         }
         [HttpPost]
-        public IActionResult UploadToFileSystem(List<IFormFile> files, string description)
+        public IActionResult UploadToFileSystem(List<IFormFile> files, string description="")
         {
             List<string> errlist = new List<string>();
                 string wwwPath = this._env.WebRootPath;
@@ -74,7 +73,7 @@ namespace FileUpload.Controllers
                     }
                     else
                     {
-                        TempData["Message"] = fileEncryptionDecryption.encryptFileUpload(basePath, file).Item2;
+                        errlist.Add(fileEncryptionDecryption.encryptFileUpload(basePath, file).Item2);
                     }
 
                 }
@@ -83,13 +82,13 @@ namespace FileUpload.Controllers
             {
                 foreach (var item in errlist)
                 {
-                    TempData["Message"] = item + " ";
+                    TempData["error"] = item + " ";
 
                 }
             }
             else
             {
-                TempData["Message"] = "File successfully uploaded to File System.";
+                TempData["success"] = "File successfully uploaded to File System.";
 
             }      
 
@@ -132,11 +131,6 @@ namespace FileUpload.Controllers
             if (file == null) return null;
             return View(file);
         }
-
-      
-
-
-
         public IActionResult Privacy()
         {
             return View();
