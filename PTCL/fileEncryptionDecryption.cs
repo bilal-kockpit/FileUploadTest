@@ -11,7 +11,7 @@ namespace PTCL
 {
     public class fileEncryptionDecryption
     {
-        public string extentions { get; set; } = "png,jpg,jped,gif,doc,docx,pdf";
+        public string extentions { get; set; } = "png,jpg,jped,gif,doc,docx,pdf,txt";
         public static bool IsValid( string filePath)
         {
             bool flag = false;
@@ -29,6 +29,7 @@ namespace PTCL
                 case ".xlsx":
                 case ".tif":
                 case ".rtf":
+                case ".txt":
                     flag = true;
                     break;                                      
                 default:
@@ -42,6 +43,11 @@ namespace PTCL
             bool flag = true;
             string msg = "";
             try {
+                // Explicit check for .txt files
+                if (Path.GetExtension(file.FileName).ToLower() == ".txt")
+                {
+                    return true;  // Allow text files without further checks
+                }
                 using (var fileStream = File.OpenRead(filePath))
                 {
                     var isRecognizableType = FileTypeValidator.IsTypeRecognizable(fileStream);

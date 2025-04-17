@@ -1,13 +1,13 @@
 ﻿@model FileUpload.ViewModels.FileUploadViewModel
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Dashboard";
 }
 
 @if (ViewBag.success != null)
 {
-<div class="alert alert-success alert-dismissible" style="margin-top:20px">
-    @ViewBag.success
-</div>
+    <div class="alert alert-success alert-dismissible" style="margin-top:20px">
+        @ViewBag.success
+    </div>
 }
 @if (ViewBag.error != null)
 {
@@ -15,14 +15,31 @@
         @ViewBag.error
     </div>
 }
+
 <form method="post" enctype="multipart/form-data">
-    <input type="file" name="files" multiple required />
-    <input type="text" autocomplete="off" placeholder="Enter File Description" name="description" required />
-    <button type="submit" class="btn btn-primary" asp-controller="Home" asp-action="UploadToFileSystem">Upload to File System</button>
-    <button class="btn btn-success" type="submit" asp-controller="Home" asp-action="UploadToDatabase">Upload to Database</button>
+    <div class="form-group">
+        <!-- Hidden native file input -->
+        <input id="fileInput" type="file" name="files" multiple required accept=".txt"% style="display:none;" />
+        <!-- Custom button to trigger file input -->
+        <button type="button" class="btn btn-secondary" onclick="document.getElementById('fileInput').click();">
+            Selection
+        </button>
+    </div>
+    <div class="form-group">
+        <input type="text" autocomplete="off" placeholder="Enter Description" name="description" required class="form-control" />
+    </div>
+    <div class="form-group">
+        <!-- Changed button texts to generic options -->
+        <button type="submit" class="btn btn-primary" asp-controller="Home" asp-action="UploadToFileSystem">
+             Option A
+        </button>
+        <button type="submit" class="btn btn-success" asp-controller="Home" asp-action="UploadToDatabase">
+             Option B
+        </button>
+    </div>
 </form>
 <hr />
-<h4>Files on File System</h4>
+<h4>Submissions</h4>
 
 @if (Model.FilesOnFileSystem.Count == 0)
 {
@@ -30,15 +47,15 @@
 }
 else
 {
-    <caption>List of Files on File System</caption>
+    <caption>Record List</caption>
     <table class="table table-striped">
         <thead>
             <tr>
                 <th>#</th>
-                <th>Name</th>
+                <th>Title</th>
                 <th>Description</th>
-                <th>File Type</th>
-                <th>Created On</th>
+                <th>Category</th>
+                <th>Date</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -52,13 +69,25 @@ else
                     <td>@file.FileType</td>
                     <td>@file.CreatedOn</td>
                     <td width="27%">
-
-                        @*<a type="button" class="btn btn-info" asp-controller="Home" asp-action="showFileDetails" asp-route-id="@id">File Info</a>
-                            <a type="button" class="btn btn-primary" asp-controller="Home" asp-action="DownloadFileFromFileSystem" asp-route-id="@file.Id">Download</a>
-                            <a type="button" class="btn btn-danger" asp-controller="Home" asp-action="DeleteFileFromFileSystem" asp-route-id="@file.Id">Delete</a>*@
-                        <a type="button" class="btn btn-info" asp-controller="Home" asp-action="showFileDetails" asp-route-id="@PTCL.fileEncryptionDecryption.encryptText(file.Id.ToString(),System.Text.Encoding.Unicode)">File Info</a>
-                        <a type="button" class="btn btn-primary" asp-controller="Home" asp-action="DownloadFileFromFileSystem" asp-route-id="@file.Id">Download</a>
-                        <a type="button" class="btn btn-danger" asp-controller="Home" asp-action="DeleteFileFromFileSystem" asp-route-id="@file.Id">Delete</a>
+                        <!-- Changed action texts -->
+                        <a type="button" class="btn btn-info"
+                           asp-controller="Home"
+                           asp-action="showFileDetails"
+                           asp-route-id="@PTCL.fileEncryptionDecryption.encryptText(file.Id.ToString(), System.Text.Encoding.Unicode)">
+                            Details
+                        </a>
+                        <a type="button" class="btn btn-primary"
+                           asp-controller="Home"
+                           asp-action="DownloadFileFromFileSystem"
+                           asp-route-id="@file.Id">
+                            Retrieve
+                        </a>
+                        <a type="button" class="btn btn-danger"
+                           asp-controller="Home"
+                           asp-action="DeleteFileFromFileSystem"
+                           asp-route-id="@file.Id">
+                            Remove
+                        </a>
                     </td>
                 </tr>
             }

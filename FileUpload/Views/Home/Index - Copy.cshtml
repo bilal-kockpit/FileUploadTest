@@ -1,0 +1,67 @@
+﻿@model FileUpload.ViewModels.FileUploadViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@if (ViewBag.success != null)
+{
+<div class="alert alert-success alert-dismissible" style="margin-top:20px">
+    @ViewBag.success
+</div>
+}
+@if (ViewBag.error != null)
+{
+    <div class="alert alert-danger alert-dismissible" style="margin-top:20px">
+        @ViewBag.error
+    </div>
+}
+<form method="post" enctype="multipart/form-data">
+    <input type="file" name="files" multiple required />
+    <input type="text" autocomplete="off" placeholder="Enter File Description" name="description" required />
+    <button type="submit" class="btn btn-primary" asp-controller="Home" asp-action="UploadToFileSystem">Upload to File System</button>
+    <button class="btn btn-success" type="submit" asp-controller="Home" asp-action="UploadToDatabase">Upload to Database</button>
+</form>
+<hr />
+<h4>Files on File System</h4>
+
+@if (Model.FilesOnFileSystem.Count == 0)
+{
+    <caption>No Records Found</caption>
+}
+else
+{
+    <caption>List of Files on File System</caption>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>File Type</th>
+                <th>Created On</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var file in Model.FilesOnFileSystem)
+            {
+                <tr>
+                    <th>@file.Id</th>
+                    <td>@file.Name</td>
+                    <td>@file.Description</td>
+                    <td>@file.FileType</td>
+                    <td>@file.CreatedOn</td>
+                    <td width="27%">
+
+                        @*<a type="button" class="btn btn-info" asp-controller="Home" asp-action="showFileDetails" asp-route-id="@id">File Info</a>
+                            <a type="button" class="btn btn-primary" asp-controller="Home" asp-action="DownloadFileFromFileSystem" asp-route-id="@file.Id">Download</a>
+                            <a type="button" class="btn btn-danger" asp-controller="Home" asp-action="DeleteFileFromFileSystem" asp-route-id="@file.Id">Delete</a>*@
+                        <a type="button" class="btn btn-info" asp-controller="Home" asp-action="showFileDetails" asp-route-id="@PTCL.fileEncryptionDecryption.encryptText(file.Id.ToString(),System.Text.Encoding.Unicode)">File Info</a>
+                        <a type="button" class="btn btn-primary" asp-controller="Home" asp-action="DownloadFileFromFileSystem" asp-route-id="@file.Id">Download</a>
+                        <a type="button" class="btn btn-danger" asp-controller="Home" asp-action="DeleteFileFromFileSystem" asp-route-id="@file.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

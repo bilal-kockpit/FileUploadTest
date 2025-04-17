@@ -88,7 +88,7 @@ namespace FileUpload.Controllers
             }
             else
             {
-                TempData["success"] = "File successfully uploaded to File System.";
+                TempData["success"] = "successfull.";
 
             }      
 
